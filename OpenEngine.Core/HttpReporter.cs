@@ -32,6 +32,8 @@ namespace OpenEngine.Core
         }
 
         private void handleRequest(HttpListenerContext ctx) {
+            if (ctx.Request.Url.AbsolutePath == "/favicon.ico")
+                return;
             if (ctx.Request.Url.AbsolutePath == "/force-run") {
                 _state.ForceRun();
                 ctx.Response.Redirect("/");
@@ -48,13 +50,15 @@ namespace OpenEngine.Core
                         {
                             new Process().Query(script, "", false, Path.GetDirectoryName(script), (s) => info.AppendLine(s));
                         }
-                        catch
+                        catch (Exception ex)
                         {
+                            Logger.Write(ex);
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Logger.Write(ex);
                 }
             }
             var additionalInfo = "";
@@ -162,7 +166,9 @@ namespace OpenEngine.Core
                 }
 
                 try { ProcessRequest(context); }
-                catch (Exception e) { Console.Error.WriteLine(e); }
+                catch (Exception e) { 
+                    Logger.Write(e);
+                }
             }
         }
 

@@ -46,10 +46,11 @@ namespace OpenEngine.Core
                         foreach (var script in Directory.GetFiles(path)) {
                             try
                             {
-                                new Process().Query(script, "", false, Path.GetDirectoryName(script), (s) => _sb.AppendLine(s));
+                                new Process().Query(script, "", false, Path.GetDirectoryName(script), (s) => _sb.AppendLine(DateTime.Now.ToLongTimeString() + " " + s));
                             }
-                            catch
+                            catch (Exception ex)
                             {
+                                Logger.Write(ex);
                             }
                         }
                     }

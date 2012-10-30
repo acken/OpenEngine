@@ -32,8 +32,8 @@ namespace OpenEngine.Core
                 Environment.OSVersion.Platform != PlatformID.MacOSX)
             {
                 arguments = "/c " +
-                    "^\"" + command + "^\" " +
-                    arguments.Replace("\"", "^\"");
+                    "^\"" + batchEscape(command) + "^\" " +
+                    batchEscape(arguments);
                 command = "cmd.exe";
             }
 			
@@ -49,10 +49,16 @@ namespace OpenEngine.Core
 				};
             if (proc.Start())
             {
-				proc.BeginOutputReadLine();
-				while (!exit && !proc.HasExited)
+                proc.BeginOutputReadLine();
+                while (!exit && !proc.HasExited)
 					System.Threading.Thread.Sleep(10);
             }
+        }
+
+        private static string batchEscape(string text) {
+            foreach (var str in new[] { "^"," ", "&", "(", ")", "[", "]", "{", "}", "=", ";", "!", "'", "+", ",", "`", "~", "\"" })
+                text = text.Replace(str, "^" + str);
+            return text;
         }
 
         private static void prepareProcess(

@@ -21,7 +21,7 @@ namespace OpenEngine.Service
 
         protected override void OnStart(string[] args)
         {
-            _bootstrapper = new Bootstrapper();
+            _bootstrapper = new Bootstrapper(new EventLogger());
             _bootstrapper.Start();
         }
 

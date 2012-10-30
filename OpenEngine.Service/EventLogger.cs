@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using OpenEngine.Core;
 
 namespace OpenEngine.Service
 {
-    class EventLogger
+    class EventLogger : ILogger
     {
         private const string SOURCE = "OpenEngine";
         private const string LOG = "Application";
@@ -40,6 +41,11 @@ namespace OpenEngine.Service
             if (!EventLog.SourceExists(SOURCE))
                 EventLog.CreateEventSource(SOURCE, LOG);
             _sourceExists = true;
+        }
+
+        public void Write(Exception ex)
+        {
+            WriteError(ex.ToString());
         }
     }
 }

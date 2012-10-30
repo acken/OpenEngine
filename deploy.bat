@@ -26,6 +26,9 @@ IF NOT EXIST %DEPLOYDIR%\Installer (
 )
 
 copy %BINARYDIR%\OpenEngine.Core.dll %DEPLOYDIR%\OpenEngine.Core.dll
+copy %BINARYDIR%\OpenEngine.Core.pdb %DEPLOYDIR%\OpenEngine.Core.pdb
 copy %BINARYDIR%\OpenEngine.Console.exe %DEPLOYDIR%\OpenEngine.Console.exe
+copy %BINARYDIR%\OpenEngine.Console.pdb %DEPLOYDIR%\OpenEngine.Console.pdb
 copy %BINARYDIR%\OpenEngine.Service.exe %DEPLOYDIR%\OpenEngine.Service.exe
+copy %BINARYDIR%\OpenEngine.Service.pdb %DEPLOYDIR%\OpenEngine.Service.pdb
 copy %BINARYDIR%\Configuration\* %DEPLOYDIR%\

@@ -11,10 +11,18 @@ namespace OpenEngine.Console
     {
         static void Main(string[] args)
         {
-            var bootstrapper = new Bootstrapper();
+            var bootstrapper = new Bootstrapper(new ConsoleLogger());
             bootstrapper.Start();
             System.Console.ReadLine();
             bootstrapper.Stop();
+        }
+    }
+
+    class ConsoleLogger : ILogger
+    {
+        public void Write(Exception ex)
+        {
+            System.Console.WriteLine(ex.ToString());
         }
     }
 }

@@ -13,6 +13,13 @@ namespace OpenEngine.Core
         private EventPolling _poller;
         private HttpReporter _reporter;
 
+        public Bootstrapper() {
+        }
+
+        public Bootstrapper(ILogger logger) {
+            Logger.SetLogger(logger);
+        }
+
         public void Start() {
             _poller = new EventPolling(getDelay());
             _poller.Start();
