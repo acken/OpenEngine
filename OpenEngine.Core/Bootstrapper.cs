@@ -29,7 +29,8 @@ namespace OpenEngine.Core
             try {
                 return int.Parse(getExtension("delay"));
             } catch {
-                return 5000;
+                // Defaults to once every hour
+                return 3600000;
             }
         }
 

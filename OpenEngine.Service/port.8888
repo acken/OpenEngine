@@ -1,0 +1,1 @@
+﻿By default the http interface listens on port 8888 sa given by the extension. To listen on a different port change the extension

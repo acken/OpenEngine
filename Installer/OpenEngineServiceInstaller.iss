@@ -24,6 +24,9 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Files]
 Source: "..\ReleaseBinaries\OpenEngine.Service.exe"; DestDir: "{app}"; Flags: ignoreversion; BeforeInstall: StopService();
 Source: "..\ReleaseBinaries\OpenEngine.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ReleaseBinaries\delay.3600000"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ReleaseBinaries\port.8888"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\README"; DestDir: "{app}"; Flags: ignoreversion
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
