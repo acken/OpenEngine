@@ -39,7 +39,7 @@ Source: "..\README"; DestDir: "{app}"; Flags: ignoreversion
 [Registry]
 
 [Run]
-Filename:"{reg:HKLM\SOFTWARE\Microsoft\.NETFramework,InstallRoot}\{reg:HKCR\CLSID\{{0A5E409F-23A3-4911-9161-A2153357DD00%7D\InprocServer32\10.0.0.0,RuntimeVersion}\InstallUtil.exe"; Parameters: OpenEngine.Service.exe;WorkingDir: {app}; StatusMsg: "Installing service ..."; Flags: runhidden;
+Filename:"{dotnet40}\InstallUtil.exe"; Parameters: OpenEngine.Service.exe;WorkingDir: {app}; StatusMsg: "Installing service ..."; Flags: runhidden;
 Filename:"net.exe"; Parameters: start OpenEngine;WorkingDir: {app}; StatusMsg: "Starting service ..."; Flags: runhidden;
 
 [UninstallRun]
