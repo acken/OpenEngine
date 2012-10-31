@@ -47,6 +47,7 @@ namespace OpenEngine.Core
 					else
 						onRecievedLine(data.Data);
 				};
+            proc.Exited += (sender, e) => exit = true;
             if (proc.Start())
             {
                 proc.BeginOutputReadLine();
