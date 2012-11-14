@@ -63,7 +63,7 @@ namespace OpenEngine.Core
             }
             var additionalInfo = "";
             if (info.Length > 0)
-                additionalInfo = info.ToString().Replace(Environment.NewLine, "<br>") + "<br>";
+                additionalInfo = info.ToString().Replace(Environment.NewLine, "<br>").Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;") + "<br>";
             var response = ctx.Response;
             byte[] buffer = Encoding.UTF8.GetBytes(
                 "<HTML><BODY>" +
