@@ -21,7 +21,7 @@ namespace OpenEngine.Service
 
         protected override void OnStart(string[] args)
         {
-            _bootstrapper = new Bootstrapper(new EventLogger());
+            _bootstrapper = new Bootstrapper(new EventLogger(), Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
             _bootstrapper.Start();
         }
 

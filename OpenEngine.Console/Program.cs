@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -11,7 +12,7 @@ namespace OpenEngine.Console
     {
         static void Main(string[] args)
         {
-            var bootstrapper = new Bootstrapper(new ConsoleLogger());
+            var bootstrapper = new Bootstrapper(new ConsoleLogger(), Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
             bootstrapper.Start();
             System.Console.ReadLine();
             bootstrapper.Stop();

@@ -46,6 +46,7 @@
     <Compile Include="ProcessExtensions.cs" />
     <Compile Include="HttpReporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScriptFailHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Configuration\delay.3600000">

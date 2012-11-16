@@ -26,7 +26,7 @@ namespace OpenEngine.Core
             string arguments,
             bool visible,
             string workingDir,
-			Action<string> onRecievedLine)
+			Action<string,bool> onRecievedLine)
         {
             if (Environment.OSVersion.Platform != PlatformID.Unix &&
                 Environment.OSVersion.Platform != PlatformID.MacOSX)
@@ -37,21 +37,30 @@ namespace OpenEngine.Core
                 command = "cmd.exe";
             }
 			
-			var exit = false;
+			var endOfOutput = false;
+            var endOfError = false;
             prepareProcess(proc, command, arguments, visible, workingDir);
             proc.StartInfo.UseShellExecute = false;
             proc.StartInfo.RedirectStandardOutput = true;
+            proc.StartInfo.RedirectStandardError = true;
+            proc.ErrorDataReceived += (s, data) => {
+                if (data.Data == null)
+                    endOfError = true;
+                else
+                    onRecievedLine("Error: " + data.Data, true);
+            };
 			proc.OutputDataReceived += (s, data) => {
 					if (data.Data == null)
-						exit = true;
+                        endOfOutput = true;
 					else
-						onRecievedLine(data.Data);
+                        onRecievedLine(data.Data, false);
 				};
-            proc.Exited += (sender, e) => exit = true;
+            
             if (proc.Start())
             {
                 proc.BeginOutputReadLine();
-                while (!exit && !proc.HasExited)
+                proc.BeginErrorReadLine();
+                while (!endOfError || !endOfOutput)
 					System.Threading.Thread.Sleep(10);
             }
         }

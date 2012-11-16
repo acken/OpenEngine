@@ -15,9 +15,11 @@ namespace OpenEngine.Core
         private EventPolling _state;
         private HttpServer _server;
         private int _port;
+        private ScriptFailHandler _failHandler;
 
-        public HttpReporter(EventPolling state, int port) {
+        public HttpReporter(EventPolling state, int port, ScriptFailHandler failHandler) {
             _state = state;
+            _failHandler = failHandler;
             _port = port;
             _server = new HttpServer(Environment.ProcessorCount);
             _server.ProcessRequest += handleRequest;
@@ -36,19 +38,77 @@ namespace OpenEngine.Core
                 return;
             if (ctx.Request.Url.AbsolutePath == "/force-run") {
                 _state.ForceRun();
+                System.Threading.Thread.Sleep(500);
                 ctx.Response.Redirect("/");
                 ctx.Response.Close();
                 return;
             }
-            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "states");
+            var info = getStateScriptOutput();
+            var triggerState = getTriggerScriptState();
+            var additionalInfo = "";
+            if (info.Length > 0)
+                additionalInfo = info.ToString().Replace(Environment.NewLine, "<br>").Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;") + "<br>";
+            var response = ctx.Response;
+            byte[] buffer = Encoding.UTF8.GetBytes(
+                "<HTML><BODY>" +
+                "<table cellpadding=\"5\" cellspacing=\"0\">" +
+                    "<tr><td><a href=\"/force-run\">Trigger run now</a></td><td></td></tr>" +
+                    "<tr><td bgcolor=\"LightGray\"><h1>Status</h1></td><td><h1>Summary</h1></td></tr>" + 
+                    "<tr>" +
+                        "<td valign=\"top\" bgcolor=\"LightGray\">" +
+                            triggerState +
+                        "</td>" +
+                        "<td valign=\"top\">" + 
+                            additionalInfo +
+                            "<strong>" + _state.GetState().Replace(Environment.NewLine, "<br") + "</strong><br><br><strong>Output</strong><br>" + 
+                            _state.GetOutput().Replace(Environment.NewLine, "<br>") +
+                        "</td>" +
+                    "</tr>" +
+                "</table>" +
+                "</BODY></HTML>");
+            // Get a response stream and write the response to it.
+            response.ContentLength64 = buffer.Length;
+            var output = response.OutputStream;
+            output.Write(buffer,0,buffer.Length);
+            output.Close();
+        }
+
+        private string getTriggerScriptState()
+        {
+            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "triggers");
             var info = new StringBuilder();
-            if (Directory.Exists(path)) {
+            if (Directory.Exists(path))
+            {
                 try
                 {
                     foreach (var script in Directory.GetFiles(path)) {
+                        if (_failHandler.GetState(script) == null)
+                            info.Append("<font color=\"Green\">" + Path.GetFileName(script) + "</font><br>");
+                        else
+                            info.Append("<font color=\"Red\">" + Path.GetFileName(script) + "</font><br>");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write(ex);
+                }
+            }
+            return info.ToString();
+        }
+
+        private StringBuilder getStateScriptOutput()
+        {
+            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "states");
+            var info = new StringBuilder();
+            if (Directory.Exists(path))
+            {
+                try
+                {
+                    foreach (var script in Directory.GetFiles(path))
+                    {
                         try
                         {
-                            new Process().Query(script, "", false, Path.GetDirectoryName(script), (s) => info.AppendLine(s));
+                            new Process().Query(script, "", false, Path.GetDirectoryName(script), (s, error) => info.AppendLine(s));
                         }
                         catch (Exception ex)
                         {
@@ -61,23 +121,7 @@ namespace OpenEngine.Core
                     Logger.Write(ex);
                 }
             }
-            var additionalInfo = "";
-            if (info.Length > 0)
-                additionalInfo = info.ToString().Replace(Environment.NewLine, "<br>").Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;") + "<br>";
-            var response = ctx.Response;
-            byte[] buffer = Encoding.UTF8.GetBytes(
-                "<HTML><BODY>" +
-                "<font size=\"16\">Status</font><br>" +
-                "<a href=\"/force-run\">Start new run now</a><br><br>" +
-                additionalInfo +
-                "<strong>" + _state.GetState().Replace(Environment.NewLine, "<br") + "</strong><br><br><strong>Output</strong><br>" + 
-                _state.GetOutput().Replace(Environment.NewLine, "<br>") + 
-                "</BODY></HTML>");
-            // Get a response stream and write the response to it.
-            response.ContentLength64 = buffer.Length;
-            var output = response.OutputStream;
-            output.Write(buffer,0,buffer.Length);
-            output.Close();
+            return info;
         }
     }
 

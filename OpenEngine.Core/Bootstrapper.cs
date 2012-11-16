@@ -12,18 +12,32 @@ namespace OpenEngine.Core
     {
         private EventPolling _poller;
         private HttpReporter _reporter;
+        private string _storage;
 
-        public Bootstrapper() {
+        public Bootstrapper(string storage) {
+            initStorage(storage);
         }
 
-        public Bootstrapper(ILogger logger) {
+        public Bootstrapper(ILogger logger, string storage) {
             Logger.SetLogger(logger);
+            initStorage(storage);
+        }
+
+        private void initStorage(string storage)
+        {
+            _storage = storage;
+            if (!Directory.Exists(_storage))
+                throw new Exception("You need to specify an existing storage base location");
+            _storage = Path.Combine(_storage, "OpenEngine");
+            if (!Directory.Exists(_storage))
+                Directory.CreateDirectory(_storage);
         }
 
         public void Start() {
-            _poller = new EventPolling(getDelay());
+            var failHandler = new ScriptFailHandler(_storage);
+            _poller = new EventPolling(getDelay(), failHandler);
             _poller.Start();
-            _reporter = new HttpReporter(_poller, getPort());
+            _reporter = new HttpReporter(_poller, getPort(), failHandler);
             _reporter.Start();
         }
 
