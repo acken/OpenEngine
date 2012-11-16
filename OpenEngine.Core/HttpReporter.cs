@@ -52,7 +52,7 @@ namespace OpenEngine.Core
             byte[] buffer = Encoding.UTF8.GetBytes(
                 "<HTML><BODY>" +
                 "<table cellpadding=\"5\" cellspacing=\"0\">" +
-                    "<tr><td><a href=\"/force-run\">Trigger run now</a></td><td></td></tr>" +
+                    "<tr><td><a href=\"/force-run\">Trigger run now</a></td><td><strong>" + _state.GetState().Replace(Environment.NewLine, "<br") + "</strong></td></tr>" +
                     "<tr><td bgcolor=\"LightGray\"><h1>Scripts&nbsp;&nbsp;&nbsp;</h1></td><td><h1>Summary</h1></td></tr>" + 
                     "<tr>" +
                         "<td valign=\"top\" bgcolor=\"LightGray\">" +
@@ -60,7 +60,7 @@ namespace OpenEngine.Core
                         "</td>" +
                         "<td valign=\"top\">" + 
                             additionalInfo +
-                            "<strong>" + _state.GetState().Replace(Environment.NewLine, "<br") + "</strong><br><br><strong>Output</strong><br>" + 
+                            "<strong>Output</strong><br>" + 
                             _state.GetOutput().Replace(Environment.NewLine, "<br>") +
                         "</td>" +
                     "</tr>" +

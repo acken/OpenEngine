@@ -71,7 +71,7 @@ namespace OpenEngine.Core
                                         if (error)
                                             _sb.AppendLine(DateTime.Now.ToLongTimeString() + " <font color=\"Red\">" + s + "</font>");
                                         else
-                                            _sb.AppendLine(DateTime.Now.ToLongTimeString() + s);
+                                            _sb.AppendLine(DateTime.Now.ToLongTimeString() + " " + s);
                                         scriptOutput.AppendLine(DateTime.Now.ToLongTimeString() + " " + s);
                                         if (error)
                                             hasFailed = true;
