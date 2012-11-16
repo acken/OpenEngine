@@ -68,7 +68,10 @@ namespace OpenEngine.Core
                                     false,
                                     Path.GetDirectoryName(script),
                                     (s, error) => {
-                                        _sb.AppendLine(DateTime.Now.ToLongTimeString() + " " + s);
+                                        if (error)
+                                            _sb.AppendLine(DateTime.Now.ToLongTimeString() + " <font color=\"Red\">" + s + "</font>");
+                                        else
+                                            _sb.AppendLine(DateTime.Now.ToLongTimeString() + s);
                                         scriptOutput.AppendLine(DateTime.Now.ToLongTimeString() + " " + s);
                                         if (error)
                                             hasFailed = true;

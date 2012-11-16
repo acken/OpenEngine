@@ -53,7 +53,7 @@ namespace OpenEngine.Core
                 "<HTML><BODY>" +
                 "<table cellpadding=\"5\" cellspacing=\"0\">" +
                     "<tr><td><a href=\"/force-run\">Trigger run now</a></td><td></td></tr>" +
-                    "<tr><td bgcolor=\"LightGray\"><h1>Status</h1></td><td><h1>Summary</h1></td></tr>" + 
+                    "<tr><td bgcolor=\"LightGray\"><h1>Scripts&nbsp;&nbsp;&nbsp;</h1></td><td><h1>Summary</h1></td></tr>" + 
                     "<tr>" +
                         "<td valign=\"top\" bgcolor=\"LightGray\">" +
                             triggerState +
@@ -108,7 +108,17 @@ namespace OpenEngine.Core
                     {
                         try
                         {
-                            new Process().Query(script, "", false, Path.GetDirectoryName(script), (s, error) => info.AppendLine(s));
+                            new Process().Query(
+                                script,
+                                "",
+                                false,
+                                Path.GetDirectoryName(script),
+                                (s, error) => {
+                                    if (error)
+                                        info.Append("<font color=\"Red\">" + s + "</font><br>");
+                                    else
+                                        info.AppendLine(s);
+                                });
                         }
                         catch (Exception ex)
                         {
