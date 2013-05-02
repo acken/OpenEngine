@@ -1,1 +1,30 @@
+Warning: This will not scale, this will not be the least bit enterprise, it just solves a simple problem.
+
+Problem:
+  When doing something like CI I often just need something running scripts periodically using predefined credentials
+
+OpenEngine
+This application is a generic engine running scripts as a windows service or as a console application. How often to run the scripts and what port to use for the web interface are the only configurable options.
+
+Building OpenEngine
+If on Linux or OSX use deploy.sh. The binaries will be in the ReleaseBinaries folder when done. On Windows use release.bat to build both the console and the windows service version. The console binaries will end up in the ReleaseBinaries folder while the windows service installer can be found in ReleaseBinaries\Installer.
+
+Getting started
+When going with the windows service version just next through the installer. Head over to the install directory and modify the delay.xxxxxxx and replace the file extension with the number of milliseconds you want between runs. Same thing with port.xxxx. Replace the extension with the desired listen port. Also make sure the service is running under the credentials you want.
+
+Scripts
+There are two types of scripts. State scripts which are run every time you refresh the page and trigger scripts which are run on every periodic run. Scripts communicate with the application through std out. Whatever you want printed on the web page you write to std out. Any executable file / script file can be used as a script.
+
+State scripts
+Create a "states" folder in the install path to host all state scripts. Simply place an executable file / script in the folder, write to std out and refresh the webpage.
+
+Trigger scripts
+Create a "triggers" folder in the install path to host all trigger scripts. Simply place an executable file / script in the folder, write to std out and refresh the webpage. To force a new run click "Trigger Run Now" in the top left corner of the webpage. If "--fail-output-from-last-run" is passed as an argument to the trigger script it means that the last run failed. The next argument will contain the path to the file containing error output. To fail a run just make sure your executable / script fails and writes to std error.
+
+Running as a console app
 Registering URL for cmd line client (netsh http add urlacl url=http://+:8888/ user=domain\user)
+
+That's about it
+
+OpenEngine could not have happened without the awesomeness of:
+Inno Setup => http://www.jrsoftware.org/isinfo.php
