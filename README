@@ -26,6 +26,19 @@ Create a "triggers" folder in the install path to host all trigger scripts. Simp
 Running as a console app
 Registering URL for cmd line client (netsh http add urlacl url=http://+:8888/ user=domain\user)
 
+Just to get you started:
+deploy-it.pseudo
+  run("git checkout test")
+  if "Already up-to-date" in run("git pull test test")
+    run("deployment script that I have under source control")
+  else
+    print("Nothing new here")
+  print("Done!")
+
+state.pseudo
+  print("Current version")
+  print("Current DB version")
+
 That's about it
 
 OpenEngine could not have happened without the awesomeness of:
