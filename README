@@ -36,13 +36,13 @@ Just to get you started:
 deploy-it.pseudo
   run("git checkout test")
   pullState = run("git pull test test")
-  if "--fail-output-from-last-run" in args or "Already up-to-date" not in pullState
-    if "error:" or "fatal:" in pullState
-      print("git pull failed")
-      return
+  if "error:" or "fatal:" in pullState
+    print("git pull failed")
+    return
+  if "Already up-to-date" not in pullState or "--fail-output-from-last-run" in args
     run("deployment script that I have under source control")
   else
-  print("Nothing new here")
+    print("Nothing new here")
 
 state.pseudo
   print("Current version")
