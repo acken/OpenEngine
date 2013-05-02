@@ -1,7 +1,9 @@
-Warning: This will not scale, this will not be the least bit enterprise, it just solves a simple problem.
+Warning:
+This will not scale, this will not be the least bit enterprise, it just solves a simple problem.
 
 Problem:
-  When doing something like CI I often just need something running scripts periodically using predefined credentials
+When doing something like CI I often just need something running scripts periodically using predefined credentials
+
 
 OpenEngine
 This application is a generic engine running scripts as a windows service or as a console application. How often to run the scripts and what port to use for the web interface are the only configurable options.
