@@ -32,8 +32,6 @@ OpenEngine could not have happened without the awesomeness of:
 Inno Setup => http://www.jrsoftware.org/isinfo.php
 
 
-
-
 Just to get you started:
 deploy-it.pseudo
   run("git checkout test")
