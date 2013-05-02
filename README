@@ -35,11 +35,14 @@ Inno Setup => http://www.jrsoftware.org/isinfo.php
 Just to get you started:
 deploy-it.pseudo
   run("git checkout test")
-  if "Already up-to-date" not in run("git pull test test")
+  pullState = run("git pull test test")
+  if "--fail-output-from-last-run" in args or "Already up-to-date" not in pullState
+    if "error:" or "fatal:" in pullState
+      print("git pull failed")
+      return
     run("deployment script that I have under source control")
   else
-    print("Nothing new here")
-  print("Done!")
+  print("Nothing new here")
 
 state.pseudo
   print("Current version")
