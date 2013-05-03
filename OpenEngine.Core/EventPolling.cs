@@ -19,6 +19,11 @@ namespace OpenEngine.Core
         private bool _force = false;
         private ScriptFailHandler _failHandler;
 
+        public bool IsRunning
+        {
+            get { return _state.Contains("Running");}
+        }
+
         public EventPolling(int frequency, ScriptFailHandler failHandler)
         {
             _frequency = frequency;
