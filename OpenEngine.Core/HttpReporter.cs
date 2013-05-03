@@ -15,12 +15,15 @@ namespace OpenEngine.Core
         private EventPolling _state;
         private HttpServer _server;
         private int _port;
+        private int _refreshPeriod;
         private ScriptFailHandler _failHandler;
 
-        public HttpReporter(EventPolling state, int port, ScriptFailHandler failHandler) {
+
+        public HttpReporter(EventPolling state, int port, int refreshPeriod, ScriptFailHandler failHandler) {
             _state = state;
             _failHandler = failHandler;
             _port = port;
+            _refreshPeriod = refreshPeriod;
             _server = new HttpServer(Environment.ProcessorCount);
             _server.ProcessRequest += handleRequest;
         }
@@ -49,8 +52,12 @@ namespace OpenEngine.Core
             if (info.Length > 0)
                 additionalInfo = info.ToString().Replace(Environment.NewLine, "<br>").Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;") + "<br>";
             var response = ctx.Response;
+            string refreshScriptOnUpdate = String.Empty;
+            if(_state.IsRunning)
+                refreshScriptOnUpdate = refreshScript();
             byte[] buffer = Encoding.UTF8.GetBytes(
-                "<HTML><BODY>" +
+                "<HTML><BODY>" + 
+                refreshScriptOnUpdate +
                 "<table cellpadding=\"5\" cellspacing=\"0\">" +
                     "<tr><td><a href=\"/force-run\">Trigger run now</a></td><td><strong>" + _state.GetState().Replace(Environment.NewLine, "<br") + "</strong></td></tr>" +
                     "<tr><td bgcolor=\"LightGray\"><h1>Scripts&nbsp;&nbsp;&nbsp;</h1></td><td><h1>Summary</h1></td></tr>" + 
@@ -71,6 +78,13 @@ namespace OpenEngine.Core
             var output = response.OutputStream;
             output.Write(buffer,0,buffer.Length);
             output.Close();
+        }
+
+        private string refreshScript()
+        {
+            return "<script type='text/javascript'>"+
+                "setTimeout(function(){ window.location.reload(1);}, "+_refreshPeriod.ToString()+");"+
+            "</script>";
         }
 
         private string getTriggerScriptState()

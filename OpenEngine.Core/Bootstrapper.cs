@@ -37,7 +37,7 @@ namespace OpenEngine.Core
             var failHandler = new ScriptFailHandler(_storage);
             _poller = new EventPolling(getDelay(), failHandler);
             _poller.Start();
-            _reporter = new HttpReporter(_poller, getPort(), failHandler);
+            _reporter = new HttpReporter(_poller, getPort(), getRefresh(), failHandler);
             _reporter.Start();
         }
 
@@ -63,6 +63,16 @@ namespace OpenEngine.Core
             }
         }
 
+        private int getRefresh() {
+            try {
+                return int.Parse(getExtension("refresh"));
+            } catch {
+            // Defaults to refresh every five seconds
+            return 5000;
+            }
+        }
+
+    
         private string getExtension(string prefix) {
             var files = Directory.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), prefix + ".*");
             if (files.Length == 0)
