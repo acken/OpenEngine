@@ -46,38 +46,120 @@ namespace OpenEngine.Core
                 ctx.Response.Close();
                 return;
             }
-            var info = getStateScriptOutput();
-            var triggerState = getTriggerScriptState();
-            var additionalInfo = "";
-            if (info.Length > 0)
-                additionalInfo = info.ToString().Replace(Environment.NewLine, "<br>").Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;") + "<br>";
             var response = ctx.Response;
-            string refreshScriptOnUpdate = String.Empty;
-            if(_state.IsRunning)
-                refreshScriptOnUpdate = refreshScript();
-            byte[] buffer = Encoding.UTF8.GetBytes(
-                "<HTML><BODY>" + 
-                refreshScriptOnUpdate +
-                "<table cellpadding=\"5\" cellspacing=\"0\">" +
-                    "<tr><td><a href=\"/force-run\">Trigger run now</a></td><td><strong>" + _state.GetState().Replace(Environment.NewLine, "<br") + "</strong></td></tr>" +
-                    "<tr><td bgcolor=\"LightGray\"><h1>Scripts&nbsp;&nbsp;&nbsp;</h1></td><td><h1>Summary</h1></td></tr>" + 
-                    "<tr>" +
-                        "<td valign=\"top\" bgcolor=\"LightGray\">" +
-                            triggerState +
-                        "</td>" +
-                        "<td valign=\"top\">" + 
-                            additionalInfo +
-                            "<strong>Output</strong><br>" + 
-                            _state.GetOutput().Replace(Environment.NewLine, "<br>") +
-                        "</td>" +
-                    "</tr>" +
-                "</table>" +
-                "</BODY></HTML>");
+            byte[] buffer = Encoding.UTF8.GetBytes(hyperText());
             // Get a response stream and write the response to it.
             response.ContentLength64 = buffer.Length;
             var output = response.OutputStream;
             output.Write(buffer,0,buffer.Length);
             output.Close();
+        }
+
+        private string hyperText()
+        {
+            var info = getStateScriptOutput();
+            var triggerState = getTriggerScriptState();
+            var additionalInfo = "";
+            if (info.Length > 0)
+                additionalInfo = info.ToString().Replace(Environment.NewLine, "<br>").Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;") + "<br>";
+
+            string refreshScriptOnUpdate = String.Empty;
+            string cssLeft = cssLeftInactive();
+            if (_state.IsRunning)
+            {
+                refreshScriptOnUpdate = refreshScript();
+                cssLeft = cssLeftActive();
+            }
+
+
+
+            return "<HTML>"+
+            "<head><style>"+
+            "body html { height: 100%; }"+
+            "div#right{ height:100% }"+
+            cssLeft +
+            ".right { "+
+            " width: 50%;"+
+            " height: 500px;"+
+            " border: 1px solid green; "+
+            " color: white; "+
+            " background-color: black;"+
+            " -webkit-border-radius:5px; " +
+            " -moz-border-radius:5px;" +
+            " -border-radius:5px;" +
+            " float: left;" +
+            " padding: 20px;"+
+            " margin: 30px; 40px; 10px; 10px;"+
+            "}\n"+
+            ".inScript { "+
+            " margin-left: 40px; "+
+            "}"+
+            "</style></head>" +
+            "<BODY>" + 
+            refreshScriptOnUpdate +
+                "<div class='left'>" +
+                    "<div class='trigger_run_now'>"+
+                        "<a href=\"/force-run\">Trigger run now</a>"+
+                    "</div>" + 
+                    "<div class='state'>"+
+                        _state.GetState().Replace(Environment.NewLine, "<br/>") +
+                    "</div>"+
+                    "<div class='scripts'>"+
+                        "<h1>Scripts</h1>"+
+                    "</div>"+
+                    "<div class='triggerState'>"+
+                        triggerState +
+                    "</div>"+
+                "</div>"+
+                "<div class='right'>"+
+                    "<div class='summaryHeader'>"+
+                        "<h1>Summary</h1>"+
+                    "</div>" + 
+                    "<div class='additionalInfo'>" +
+                        additionalInfo +
+                    "</div>"+
+                    "<div class='outputHeader'>"+
+                        "<strong>Output</strong><br/>"+
+                    "</div>" +
+                    "<div class='output'>" + 
+                        _state.GetOutput().Replace(Environment.NewLine, "<br/>") +
+                    "</div>" +
+                    "</div>" +
+                "</div>" +
+            "</BODY></HTML>";
+        }
+
+        private string cssLeftInactive()
+        {
+            return ".left { " +
+            " width: 30%; " +
+            " height: 100%" +
+            " border: 1px solid darkgrey;" +
+            " float: left; " +
+            " background-color: gainsboro;" +
+            " -webkit-border-radius:5px; " +
+            " -moz-border-radius:5px;" +
+            " -border-radius:5px;" +
+            " padding: 20px;" +
+            " margin: 30px;" +
+            "}\n";
+        }
+
+        private string cssLeftActive()
+        {
+            return ".left { " +
+            " width: 30%; " +
+            " height: 100%" +
+            " border: 1px solid darkgrey;" +
+            " float: left; " +
+            " background-color: goldenrod;" +
+            " -webkit-border-radius:5px; " +
+            " -moz-border-radius:5px;" +
+            " -border-radius:5px;" +
+            " padding: 20px;" +
+            " margin: 30px;" +
+            "}\n";
+
         }
 
         private string refreshScript()
