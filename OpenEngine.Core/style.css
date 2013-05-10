@@ -1,0 +1,77 @@
+﻿
+.left { 
+    width: 25%; 
+    border: 1px solid darkgrey;
+    float: left; 
+    padding: 10px;
+    margin: 10px;
+    -webkit-border-radius:5px; 
+    -moz-border-radius:5px;
+    -border-radius:5px;
+}
+
+.right { 
+ width: 68%;
+ border: 1px solid darkgrey; 
+ color: black; 
+ background-color: aliceblue;
+ float: right;
+ padding: 10px;
+ word-wrap: break-word; 
+ margin: 10px 5px 10px 5px;
+ -webkit-border-radius:5px; 
+ -moz-border-radius:5px;
+ -border-radius:5px;
+}
+
+.active {
+    background-color: goldenrod;
+}
+
+.inactive {
+    background-color: gainsboro;
+}
+
+.topbox {
+}
+
+.trigger_run_now { 
+ width: 25%;
+ padding: 10px;
+ margin: 10px;
+}
+
+.state { 
+ width: 68%; 
+ float: right; 
+ padding-right: 20px;
+}
+
+.state_ok {
+    color: black;
+}
+
+.state_bad {
+    color: brown;
+}
+
+.inScript { 
+}
+
+.scripts {
+}
+
+.triggerState {
+}
+
+.summaryHeader {
+}
+
+.additionalInfo {
+}
+
+.outputHeader {
+}
+
+.output {
+}
