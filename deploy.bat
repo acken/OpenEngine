@@ -31,4 +31,6 @@ copy %BINARYDIR%\OpenEngine.Console.exe %DEPLOYDIR%\OpenEngine.Console.exe
 copy %BINARYDIR%\OpenEngine.Console.pdb %DEPLOYDIR%\OpenEngine.Console.pdb
 copy %BINARYDIR%\OpenEngine.Service.exe %DEPLOYDIR%\OpenEngine.Service.exe
 copy %BINARYDIR%\OpenEngine.Service.pdb %DEPLOYDIR%\OpenEngine.Service.pdb
+copy %BINARYDIR%\style.css %DEPLOYDIR%\style.css
+
 copy %BINARYDIR%\Configuration\* %DEPLOYDIR%\

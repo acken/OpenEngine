@@ -37,7 +37,7 @@ namespace OpenEngine.Core
             var failHandler = new ScriptFailHandler(_storage);
             _poller = new EventPolling(getDelay(), failHandler);
             _poller.Start();
-            _reporter = new HttpReporter(_poller, getPort(), getRefresh(), failHandler);
+            _reporter = new HttpReporter(_poller, getPort(), getRefresh(), getStyleSheet(), failHandler);
             _reporter.Start();
         }
 
@@ -69,6 +69,17 @@ namespace OpenEngine.Core
             } catch {
             // Defaults to refresh every five seconds
             return 5000;
+            }
+        }
+
+        private string getStyleSheet()
+        {
+            try{
+                string dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string file = Path.Combine(dir,"style.css");
+                return File.ReadAllText(file);
+            } catch {
+                return "";
             }
         }
 

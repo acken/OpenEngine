@@ -54,7 +54,7 @@ namespace OpenEngine.Core
                     if (Directory.Exists(path)) {
                         var scripts = Directory.GetFiles(path);
                         var scriptSeparator = "";
-                        _state = "Running... (run stareted at {0})";
+                        _state = "Running... (run started at {0})";
                         foreach (var script in scripts) {
                             try
                             {
@@ -74,7 +74,7 @@ namespace OpenEngine.Core
                                     Path.GetDirectoryName(script),
                                     (s, error) => {
                                         if (error)
-                                            _sb.AppendLine(DateTime.Now.ToLongTimeString() + " <font color=\"Red\">" + s + "</font>");
+                                            _sb.AppendLine(DateTime.Now.ToLongTimeString() + "<span class='state_bad'>&nbsp;" + s + "</span>");
                                         else
                                             _sb.AppendLine(DateTime.Now.ToLongTimeString() + " " + s);
                                         scriptOutput.AppendLine(DateTime.Now.ToLongTimeString() + " " + s);

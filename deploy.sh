@@ -34,4 +34,5 @@ mkdir $DEPLOYDIR/Installer
 cp $BINARYDIR/OpenEngine.Core.dll $DEPLOYDIR/OpenEngine.Core.dll
 cp $BINARYDIR/OpenEngine.Console.exe $DEPLOYDIR/OpenEngine.Console.exe
 cp $BINARYDIR/OpenEngine.Service.exe $DEPLOYDIR/OpenEngine.Service.exe
+cp $BINARYDIR/style.css $DEPLOYDIR/style.css
 cp $BINARYDIR/Configuration/* $DEPLOYDIR/
