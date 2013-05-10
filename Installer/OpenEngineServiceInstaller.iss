@@ -31,6 +31,7 @@ Source: "..\ReleaseBinaries\OpenEngine.Console.pdb"; DestDir: "{app}"; Flags: ig
 Source: "..\ReleaseBinaries\delay.3600000"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\port.8888"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\ReleaseBinaries\refresh.5000"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\ReleaseBinaries\style.css"; DestDir: "{app}"; Flags: onlyifdoesntexist
 Source: "..\README"; DestDir: "{app}"; Flags: ignoreversion
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
