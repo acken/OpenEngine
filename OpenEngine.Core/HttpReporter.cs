@@ -16,16 +16,18 @@ namespace OpenEngine.Core
         private HttpServer _server;
         private int _port;
         private int _refreshPeriod;
+        private string _styleSheet;
         private ScriptFailHandler _failHandler;
 
 
-        public HttpReporter(EventPolling state, int port, int refreshPeriod, ScriptFailHandler failHandler) {
+        public HttpReporter(EventPolling state, int port, int refreshPeriod, string styleSheet, ScriptFailHandler failHandler) {
             _state = state;
             _failHandler = failHandler;
             _port = port;
             _refreshPeriod = refreshPeriod;
             _server = new HttpServer(Environment.ProcessorCount);
             _server.ProcessRequest += handleRequest;
+            _styleSheet = styleSheet;
         }
 
         public void Start() {
@@ -64,46 +66,26 @@ namespace OpenEngine.Core
                 additionalInfo = info.ToString().Replace(Environment.NewLine, "<br>").Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;") + "<br>";
 
             string refreshScriptOnUpdate = String.Empty;
-            string cssLeft = cssLeftInactive();
+            string activeStyle = "inactive";
             if (_state.IsRunning)
             {
                 refreshScriptOnUpdate = refreshScript();
-                cssLeft = cssLeftActive();
+                activeStyle = "active";
             }
 
-
-
             return "<HTML>"+
-            "<head><style>"+
-            "body html { height: 100%; }"+
-            "div#right{ height:100% }"+
-            cssLeft +
-            ".right { "+
-            " width: 50%;"+
-            " height: 500px;"+
-            " border: 1px solid green; "+
-            " color: white; "+
-            " background-color: black;"+
-            " -webkit-border-radius:5px; " +
-            " -moz-border-radius:5px;" +
-            " -border-radius:5px;" +
-            " float: left;" +
-            " padding: 20px;"+
-            " margin: 30px; 40px; 10px; 10px;"+
-            "}\n"+
-            ".inScript { "+
-            " margin-left: 40px; "+
-            "}"+
-            "</style></head>" +
+            "<head><style>"+_styleSheet+"</style></head>" +
             "<BODY>" + 
             refreshScriptOnUpdate +
-                "<div class='left'>" +
-                    "<div class='trigger_run_now'>"+
+                "<div class='topbox'>"+
+                    "<span class='trigger_run_now'>"+
                         "<a href=\"/force-run\">Trigger run now</a>"+
-                    "</div>" + 
-                    "<div class='state'>"+
+                    "</span>" + 
+                    "<span class='state'>"+
                         _state.GetState().Replace(Environment.NewLine, "<br/>") +
-                    "</div>"+
+                    "</span>"+
+                "</div>"+
+                "<div class='left " + activeStyle + " '>" +
                     "<div class='scripts'>"+
                         "<h1>Scripts</h1>"+
                     "</div>"+
@@ -123,43 +105,9 @@ namespace OpenEngine.Core
                     "</div>" +
                     "<div class='output'>" + 
                         _state.GetOutput().Replace(Environment.NewLine, "<br/>") +
-                    "</div>" +
-                    "</div>" +
+                    "</div>" +                    
                 "</div>" +
             "</BODY></HTML>";
-        }
-
-        private string cssLeftInactive()
-        {
-            return ".left { " +
-            " width: 30%; " +
-            " height: 100%" +
-            " border: 1px solid darkgrey;" +
-            " float: left; " +
-            " background-color: gainsboro;" +
-            " -webkit-border-radius:5px; " +
-            " -moz-border-radius:5px;" +
-            " -border-radius:5px;" +
-            " padding: 20px;" +
-            " margin: 30px;" +
-            "}\n";
-        }
-
-        private string cssLeftActive()
-        {
-            return ".left { " +
-            " width: 30%; " +
-            " height: 100%" +
-            " border: 1px solid darkgrey;" +
-            " float: left; " +
-            " background-color: goldenrod;" +
-            " -webkit-border-radius:5px; " +
-            " -moz-border-radius:5px;" +
-            " -border-radius:5px;" +
-            " padding: 20px;" +
-            " margin: 30px;" +
-            "}\n";
-
         }
 
         private string refreshScript()
@@ -179,9 +127,9 @@ namespace OpenEngine.Core
                 {
                     foreach (var script in Directory.GetFiles(path)) {
                         if (_failHandler.GetState(script) == null)
-                            info.Append("<font color=\"Green\">" + Path.GetFileName(script) + "</font><br>");
+                            info.Append("<span class='state_ok'>" + Path.GetFileName(script) + "</span><br/>");
                         else
-                            info.Append("<font color=\"Red\">" + Path.GetFileName(script) + "</font><br>");
+                            info.Append("<span class='state_bad'>" + Path.GetFileName(script) + "</span><br/>");
                     }
                 }
                 catch (Exception ex)
@@ -211,7 +159,7 @@ namespace OpenEngine.Core
                                 Path.GetDirectoryName(script),
                                 (s, error) => {
                                     if (error)
-                                        info.Append("<font color=\"Red\">" + s + "</font><br>");
+                                        info.Append("<span class='state_bad'>" + s + "</span><br/>");
                                     else
                                         info.AppendLine(s);
                                 });
